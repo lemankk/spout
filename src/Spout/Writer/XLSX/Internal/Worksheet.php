@@ -184,7 +184,7 @@ EOD;
 
         $rowXML = '<row r="' . $rowIndex . '" spans="1:' . $numCells . '">';
 
-        foreach($dataRow as $cellValue) {
+        foreach ($dataRow as $cellValue) {
             $rowXML .= $this->getCellXML($rowIndex, $cellNumber, $cellValue, $style->getId());
             $cellNumber++;
         }
@@ -213,13 +213,15 @@ EOD;
         $cellXML = '<c r="' . $columnIndex . $rowIndex . '"';
         $cellXML .= ' s="' . $styleId . '"';
 
-        if (CellHelper::isNonEmptyString($cellValue)) {
+        if (CellHelper::isFormula($cellValue)) {
+            $cellXML .= '><f>'.substr($cellValue, 1).'</f><v></v></c>';
+        } elseif (CellHelper::isNonEmptyString($cellValue)) {
             $cellXML .= $this->getCellXMLFragmentForNonEmptyString($cellValue);
-        } else if (CellHelper::isBoolean($cellValue)) {
+        } elseif (CellHelper::isBoolean($cellValue)) {
             $cellXML .= ' t="b"><v>' . intval($cellValue) . '</v></c>';
-        } else if (CellHelper::isNumeric($cellValue)) {
+        } elseif (CellHelper::isNumeric($cellValue)) {
             $cellXML .= '><v>' . $cellValue . '</v></c>';
-        } else if (empty($cellValue)) {
+        } elseif (empty($cellValue)) {
             if ($this->styleHelper->shouldApplyStyleOnEmptyCell($styleId)) {
                 $cellXML .= '/>';
             } else {

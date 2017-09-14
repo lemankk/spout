@@ -88,4 +88,15 @@ class CellHelper
     {
         return gettype($value) === 'boolean';
     }
+
+    /**
+     * Returns whether the given value is forumla.
+     *
+     * @param      $value
+     * @return     boolean  True if formula, False otherwise.
+     */
+    public static function isFormula($value)
+    {
+        return self::isNonEmptyString($value) && substr($value, 0, 1) == '=';
+    }
 }
